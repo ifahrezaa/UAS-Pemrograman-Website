@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- mobile metas -->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>Donate Now</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <!-- style css -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- Responsive-->
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- fevicon -->
+    <link rel="icon" href="images/fevicon.png" type="image/gif" />
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+    <!-- Tweaks for older IEs-->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,700&display=swap"
+        rel="stylesheet">
+    <!-- owl stylesheets -->
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+        media="screen">
+    <style>
+        #Komentar {
+            color: #ffffff;
+        }
+
+
+        .donate_taital_main {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            height: 200px;
+            /* Tinggi div */
+            overflow: auto;
+            /* Munculkan scrollbar jika diperlukan */
+            border: 1px solid #ccc;
+            /* Garis tepi untuk membedakan */
+            padding: 10px;
+            /* Ruang dalam di dalam div */
+        }
+
+        .commentsContainer {
+            width: 100%;
+            flex-grow: 1;
+            /* Lebar maksimum container */
+            margin: 0 auto;
+            /* Posisi container di tengah halaman */
+            padding: 20px;
+            /* Ruang dalam container */
+            background-color: #f0f0f0;
+            /* Warna latar belakang */
+            border: 1px solid #ccc;
+            /* Garis tepi container */
+            border-radius: 8px;
+            /* Sudut melengkung border */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Shadow untuk efek raised */
+            overflow: hidden;
+        }
+
+        .comment {
+            margin-bottom: 15px;
+            /* Ruang antara setiap komentar */
+            padding: 10px;
+            /* Ruang dalam komentar */
+            background-color: #fff;
+            /* Warna latar belakang komentar */
+            border: 1px solid #ddd;
+            /* Garis tepi komentar */
+            border-radius: 4px;
+            /* Sudut melengkung border */
+            word-wrap: break-word
+        }
+
+        .comment .author {
+            font-weight: bold;
+            /* Tulisan tebal untuk nama pengirim */
+            color: #333;
+            /* Warna teks untuk nama pengirim */
+        }
+
+        .comment .message {
+            margin-top: 5px;
+            /* Ruang atas pesan */
+            color: #f20e0e;
+            /* Warna teks untuk pesan */
+            word-wrap: break-word;
+        }
+
+        .peringatan {
+            color: red;
+        }
+    </style>
+
+    <script>
+        async function sendComment() {
+            const url = "https://api-komentar-pengunjung.desafintech.com/api/comments";
+            const name = document.getElementById('nama').value;
+            const comment = document.getElementById('cihuy').value;
+
+            const payload = {
+                websiteId: "d294ad2d-06a1-41bc-878a-9501787c8c41",
+                comment: comment,
+                name: name || 'Anonim'
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const jsonResponse = await response.json();
+                    alert('Komentar berhasil dikirim!');
+                    console.log(jsonResponse);
+                    getComments();
+                } else {
+                    const errorText = await response.text();
+                    alert(`Terjadi kesalahan: ${response.status} - ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim komentar.');
+            }
+        }
+
+        function getComments() {
+            var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExNywiaWF0IjoxNzIxMTEyOTk2LCJleHAiOjE3MjExMTY1OTZ9.vvLEwnmNrNSnIUQQLwHnbimZNRjIZgwnc0UzYvr92To";
+            var websiteId = 'd294ad2d-06a1-41bc-878a-9501787c8c41';
+            if (!token) {
+                alert('Anda perlu login terlebih dahulu!');
+                return;
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", `https://api-komentar-pengunjung.desafintech.com/api/website_comments/${websiteId}`, true);
+            xhr.setRequestHeader("Authorization", "Bearer " + token);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        var commentsDiv = document.getElementById('commentsContainer');
+                        commentsDiv.innerHTML = ''; // Kosongkan kontainer komentar sebelum menambahkan yang baru
+                        response.data.forEach(function (comment) {
+                            displayComment(comment);
+                        });
+                    } else {
+                        console.error('Error:', xhr.responseText);
+                    }
+                }
+            };
+
+            xhr.send();
+        }
+
+        function displayComment(comment) {
+            var commentsContainer = document.getElementById('commentsContainer');
+
+            var commentDiv = document.createElement('div');
+            commentDiv.classList.add('comment');
+
+            var authorDiv = document.createElement('div');
+            authorDiv.classList.add('author');
+
+            // Tampilkan nama dari komentar jika ada, atau tampilkan 'Anonim'
+            var name = comment.name || 'Anonim';
+            authorDiv.textContent = name;
+
+            var textDiv = document.createElement('div');
+            textDiv.textContent = comment.comment;
+
+            commentDiv.appendChild(authorDiv);
+            commentDiv.appendChild(textDiv);
+
+            commentsContainer.appendChild(commentDiv);
+        }
+
+        document.addEventListener('DOMContentLoaded', getComments);
+    </script>
+</head>
+
+<body>
+    <!-- header section start -->
+    <div class="header_section">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+         <a class="navbar-brand" href="index.html"><img src="images/logo.png"></a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+             <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+             <ul class="navbar-nav mr-auto">
+                 <li class="nav-item">
+                     <a class="nav-link" href="index.html">Beranda</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link" href="about.html">Tentang</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link" href="donate.html">Donasi</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link" href="news.html">Berita</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link" href="contact.html">Kontak</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link" href="mission.html">Misi Kami</a>
+                 </li>
+             </ul>
+             <form class="form-inline my-2 my-lg-0">
+               <div class="dropdown">
+                 <button class="login_btn btn btn-secondary" type="button" id="loginButton" style="display: none;">
+                   LOGIN
+                 </button>
+                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="loginButton" id="dropdownMenu">
+                   <a class="dropdown-item logout" href="#">Logout</a>
+                 </div>
+               </div>
+             </form>             
+         </div>
+     </nav>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var loginButton = document.querySelector('.login_btn');
+        var dropdownMenu = document.querySelector('#dropdownMenu');
+        var logoutButton = document.querySelector('.logout');
+        var username = localStorage.getItem('username');
+      
+        function updateLoginButton() {
+          if (username) {
+            loginButton.textContent = username;
+            loginButton.classList.add('dropdown-toggle');
+            loginButton.removeEventListener('click', redirectToLogin);
+            loginButton.addEventListener('click', toggleDropdown);
+          } else {
+            loginButton.textContent = 'LOGIN';
+            loginButton.classList.remove('dropdown-toggle');
+            loginButton.removeEventListener('click', toggleDropdown);
+            loginButton.addEventListener('click', redirectToLogin);
+          }
+          loginButton.style.display = 'block';
+        }
+      
+        function toggleDropdown() {
+          dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+          if (username) {
+            // Set the width of the dropdown menu to match the width of the login button
+            dropdownMenu.style.width = loginButton.offsetWidth + 'px';
+          }
+        }
+      
+        function redirectToLogin() {
+          window.location.href = 'login.html';
+        }
+      
+        logoutButton.addEventListener('click', function () {
+          localStorage.removeItem('username');
+          username = null;
+          dropdownMenu.style.display = 'none';
+          updateLoginButton();
+          window.location.href = 'donate.html'; // Refresh halaman untuk kembali ke keadaan belum login
+        });
+      
+        updateLoginButton();
+      
+        // Menyembunyikan dropdown menu ketika mengklik di luar
+        document.addEventListener('click', function(event) {
+          if (!loginButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = 'none';
+          }
+        });
+      });
+    </script>
+    <!-- header section end -->
+    <!-- donate section start -->
+    <div class="donate_section layout_padding">
+        <div class="container">
+            <h1 class="donate_taital">Orang Yang sudah Berdonasi </h1>
+            <div class="donate_taital_main">
+
+                <div id="commentsContainer"></div>
+
+            </div>
+            <!-- Comment Form Start -->
+            <div class="comment_section">
+                <h2 id="Komentar">Berikan Komentar Anda</h2>
+
+                <div class="form-group">
+                    <label id="Komentar" for="nama">Nama:</label>
+                    <input type="text" class="form-control" id="nama" name="name">
+                </div>
+                <div class="form-group">
+                    <label id="Komentar" for="cihuy">Komentar:</label>
+                    <textarea class="form-control" id="cihuy" name="comment" rows="3" required></textarea>
+                </div>
+                <h6 class="peringatan">*Nama akan disamarkan</h6>
+                <button class="btn btn-primary" onclick="sendComment()">Kirim Komentar</button>
+            </div>
+            <!-- Comment Form End -->
+
+            <!-- Comments Display Start -->
+
+            <!-- Comments Display End -->
+        </div>
+    </div>
+    <!-- donate section end -->
+    <!-- footer section start -->
+    <div class="footer_section layout_padding">
+        <div class="container">
+            <div class="footer_section_2">
+                <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-3">
+                        <div class="footer_logo"><img src="images/footer-logo.png"></div>
+                    </div>
+                    <div class="col-sm-6 col-md=6 col-lg-3">
+                        <h4 class="footer_taital">NAVIGASI</h4>
+                        <div class="footer_menu_main">
+                            <div class="footer_menu_left">
+                                <div class="footer_menu">
+                                    <ul>
+                                        <li><a href="index.html">Beranda</a></li>
+                                        <li><a href="donate.html">Donasi</a></li>
+                                        <li><a href="contact.html">Kontak</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="footer_menu_right">
+                                <div class="footer_menu">
+                                    <ul>
+                                        <li><a href="about.html">Tentang</a></li>
+                                        <li><a href="news.html">Berita</a></li>
+                                        <li><a href="mission.html">Misi Kami</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3">
+                        <h4 class="footer_taital">BERITA</h4>
+                        <p class="footer_text">Tantangan Pendidikan Anak-anak di Palestina</p>
+                        <p class="footer_text">Dampak Psikologis Konflik Terhadap Anak-anak Palestina</p>
+                        <p class="footer_text">Pembangunan Pusat Permainan untuk Anak-anak Gaza</p>
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-3">
+                        <h4 class="footer_taital">ALAMAT</h4>
+                        <p class="footer_text">Cemani</p>
+                        <p class="footer_text">+62 887838685440</p>
+                        <p class="footer_text">kumarism@gmail.com</p>
+                    </div>
+                </div>
+                <div class="footer_section_2">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4 col-lg-3">
+                            <div class="social_icon">
+                                <ul>
+                                    <li><a href="#"><img src="images/fb-icon.png"></a></li>
+                                    <li><a href="#"><img src="images/twitter-icon.png"></a></li>
+                                    <li><a href="#"><img src="images/linkedin-icon.png"></a></li>
+                                    <li><a href="#"><img src="images/instagram-icon.png"></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-lg-9">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer section end -->
+        <!-- copyright section start -->
+        <div class="copyright_section">
+            <div class="container">
+                <p class="copyright_text">2024 All Rights Reserved. </p>
+            </div>
+        </div>
+        <!-- copyright section end -->
+        <!-- Javascript files-->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/jquery-3.0.0.min.js"></script>
+        <script src="js/plugin.js"></script>
+        <!-- sidebar -->
+        <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="js/custom.js"></script>
+        <!-- javascript -->
+        <script src="js/owl.carousel.js"></script>
+        <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+        <script>
+         $(document).ready(function () {
+            $('.meanmenu-reveal').on('click', function () {
+               $('.meanmenu').slideToggle();
+            });
+         });
+      </script>     
+</body>
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+       var navItems = document.querySelectorAll('#navbar .nav-link');
+       var path = window.location.pathname.split("/").pop();
+
+       navItems.forEach(function (navItem) {
+           if (navItem.getAttribute('href') === path) {
+               navItem.parentElement.classList.add('active');
+           }
+
+           navItem.addEventListener('click', function () {
+               navItems.forEach(function (item) {
+                   item.parentElement.classList.remove('active');
+               });
+               navItem.parentElement.classList.add('active');
+           });
+       });
+   });
+</script>
+</html>
