@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <style>
+    .divider:after,
+    .divider:before {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #eee;
+    }
+    .form-control::placeholder {
+      font-size: 15px; /* Smaller font size for placeholder */
+    }
+    /* Hover and focus effect for form inputs */
+    .form-control:hover,
+    .form-control:focus {
+      border-color: #120a78 !important; /* Change border color on hover and focus */
+      box-shadow: 0 0 5px #120a78 !important; /* Optional: Add a subtle shadow effect */
+    }
+    
+  </style>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+</head>
+<body>
+  <section class="vh-100">
+    <div class="container py-5 h-100">
+      <div class="row d-flex align-items-center justify-content-center h-100">
+        <div class="col-md-8 col-lg-7 col-xl-6">
+          <img src="images/charity1.png" class="img-fluid" alt="Phone image" />
+        </div>
+        <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+          <form id="loginForm">
+            <!-- Username input -->
+            <div class="form-outline mb-4">
+              <label class="form-label" for="username">Email</label>
+              <input type="text" id="username" placeholder="Masukkan Email" class="form-control form-control-lg" />
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+              <label class="form-label" for="password">Password</label>
+              <input type="password" id="password" placeholder="Masukkan Password" class="form-control form-control-lg" />
+            </div>
+
+            <div class="d-flex justify-content-around align-items-center mb-4">
+              <!-- Checkbox -->
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="rememberMe" checked />
+                <label class="form-check-label" for="rememberMe"> Remember me </label>
+              </div>
+              <a href="#!">Forgot password?</a>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
+
+            <div class="divider d-flex align-items-center my-4">
+              <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+            </div>
+
+            <a class="btn btn-primary btn-lg btn-block" style="background-color: #3b5998" href="#!" role="button">
+              <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
+            </a>
+            <a class="btn btn-primary btn-lg btn-block" style="background-color: #55acee" href="#!" role="button">
+              <i class="fab fa-twitter me-2"></i>Continue with Twitter
+            </a>
+
+            <!-- Response Message -->
+            <div id="responseMessage" class="mt-3"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#loginForm").on("submit", function (event) {
+        event.preventDefault();
+    
+        var username = $("#username").val();
+        var password = $("#password").val();
+    
+        $.ajax({
+          url: "https://api-komentar-pengunjung.desafintech.com/api/users/signin",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify({
+            email: username,
+            password: password,
+          }),
+          success: function (response) {
+            // Simpan username ke Local Storage
+            localStorage.setItem("username", username);
+    
+            $("#responseMessage").html(
+              '<div class="alert alert-success">Login berhasil! Mengalihkan ke halaman beranda...</div>'
+            );
+            alert("Login berhasil!");
+            setTimeout(function () {
+              window.location.href = "index.html";
+            }, 2000); // Redirect setelah 2 detik
+          },
+          error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ": " + xhr.statusText;
+            $("#responseMessage").html(
+              '<div class="alert alert-danger">Login gagal. Silakan cek kredensial Anda dan coba lagi.</div>'
+            );
+            console.error("Error - " + errorMessage);
+          },
+        });
+      });
+    });
+    </script>
+    
+</body>
+</html>

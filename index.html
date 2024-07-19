@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <!-- basic -->
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- mobile metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- site metas -->
+   <title>Kumarism</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <!-- bootstrap css -->
+   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+   <!-- style css -->
+   <link rel="stylesheet" type="text/css" href="css/style.css">
+   <!-- Responsive-->
+   <link rel="stylesheet" href="css/responsive.css">
+   <!-- fevicon -->
+   <link rel="icon" href="images/fevicon.png" type="image/gif" />
+   <!-- Scrollbar Custom CSS -->
+   <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+   <!-- Tweaks for older IEs-->
+   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+   <!-- fonts -->
+   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,700&display=swap" rel="stylesheet">
+   <!-- owl stylesheets -->
+   <link rel="stylesheet" href="css/owl.carousel.min.css">
+   <link rel="stylesheet" href="css/owl.theme.default.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+      media="screen">
+
+   <style>
+      .donate_taital_main {
+         width: 100%;
+         display: flex;
+         flex-direction: column;
+         height: 200px;
+         /* Tinggi div */
+         overflow: auto;
+         /* Munculkan scrollbar jika diperlukan */
+         border: 1px solid #ccc;
+         /* Garis tepi untuk membedakan */
+         padding: 10px;
+         /* Ruang dalam di dalam div */
+      }
+
+      .commentsContainer {
+         width: 100%;
+         flex-grow: 1;
+         /* Lebar maksimum container */
+         margin: 0 auto;
+         /* Posisi container di tengah halaman */
+         padding: 20px;
+         /* Ruang dalam container */
+         background-color: #f0f0f0;
+         /* Warna latar belakang */
+         border: 1px solid #ccc;
+         /* Garis tepi container */
+         border-radius: 8px;
+         /* Sudut melengkung border */
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+         /* Shadow untuk efek raised */
+         overflow: hidden;
+      }
+
+      .comment {
+         margin-bottom: 15px;
+         /* Ruang antara setiap komentar */
+         padding: 10px;
+         /* Ruang dalam komentar */
+         background-color: #fff;
+         /* Warna latar belakang komentar */
+         border: 1px solid #ddd;
+         /* Garis tepi komentar */
+         border-radius: 4px;
+         /* Sudut melengkung border */
+         word-wrap: break-word
+      }
+
+      .comment .author {
+         font-weight: bold;
+         /* Tulisan tebal untuk nama pengirim */
+         color: #333;
+         /* Warna teks untuk nama pengirim */
+      }
+   </style>
+
+   <script>
+      function getComments() {
+         var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExNywiaWF0IjoxNzIxMTEyOTk2LCJleHAiOjE3MjExMTY1OTZ9.vvLEwnmNrNSnIUQQLwHnbimZNRjIZgwnc0UzYvr92To";
+         var websiteId = 'd294ad2d-06a1-41bc-878a-9501787c8c41';
+         if (!token) {
+            alert('Anda perlu login terlebih dahulu!');
+            return;
+         }
+
+         var xhr = new XMLHttpRequest();
+         xhr.open("GET", `https://api-komentar-pengunjung.desafintech.com/api/website_comments/${websiteId}`, true);
+         xhr.setRequestHeader("Authorization", "Bearer " + token);
+
+         xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+               if (xhr.status === 200) {
+                  var response = JSON.parse(xhr.responseText);
+                  var commentsDiv = document.getElementById('commentsContainer');
+                  commentsDiv.innerHTML = ''; // Kosongkan kontainer komentar sebelum menambahkan yang baru
+                  response.data.forEach(function (comment) {
+                     displayComment(comment);
+                  });
+               } else {
+                  console.error('Error:', xhr.responseText);
+               }
+            }
+         };
+
+         xhr.send();
+      }
+      function displayComment(comment) {
+         var commentsContainer = document.getElementById('commentsContainer');
+
+         var commentDiv = document.createElement('div');
+         commentDiv.classList.add('comment');
+
+         var authorDiv = document.createElement('div');
+         authorDiv.classList.add('author');
+
+         // Tampilkan nama dari komentar jika ada, atau tampilkan 'Anonim'
+         var name = comment.name || 'Anonim';
+         authorDiv.textContent = name;
+
+         var textDiv = document.createElement('div');
+         textDiv.textContent = comment.comment;
+
+         commentDiv.appendChild(authorDiv);
+         commentDiv.appendChild(textDiv);
+
+         commentsContainer.appendChild(commentDiv);
+      }
+
+      document.addEventListener('DOMContentLoaded', getComments);
+   </script>
+</head>
+
+<body>
+   <!-- header section start -->
+   <div class="header_section">
+
+   </div>
+   <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+      <a class="navbar-brand" href="index.html"><img src="images/logo.png"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+         <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+               <a class="nav-link" href="index.html">Beranda</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="about.html">Tentang</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="donate.html">Donasi</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="news.html">Berita</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="contact.html">Kontak</a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="mission.html">Misi Kami</a>
+            </li>
+         </ul>
+         <form class="form-inline my-2 my-lg-0">
+            <div class="dropdown">
+               <button class="login_btn btn btn-secondary" type="button" id="loginButton" style="display: none;">
+                  LOGIN
+               </button>
+               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="loginButton" id="dropdownMenu">
+                  <a class="dropdown-item logout" href="#">Logout</a>
+               </div>
+            </div>
+         </form>
+
+      </div>
+   </nav>
+
+   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+         var loginButton = document.querySelector('.login_btn');
+         var dropdownMenu = document.querySelector('#dropdownMenu');
+         var logoutButton = document.querySelector('.logout');
+         var username = localStorage.getItem('username');
+
+         function updateLoginButton() {
+            if (username) {
+               loginButton.textContent = username;
+               loginButton.classList.add('dropdown-toggle');
+               loginButton.removeEventListener('click', redirectToLogin);
+               loginButton.addEventListener('click', toggleDropdown);
+            } else {
+               loginButton.textContent = 'LOGIN';
+               loginButton.classList.remove('dropdown-toggle');
+               loginButton.removeEventListener('click', toggleDropdown);
+               loginButton.addEventListener('click', redirectToLogin);
+            }
+            loginButton.style.display = 'block';
+         }
+
+         function toggleDropdown() {
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+            if (username) {
+               // Set the width of the dropdown menu to match the width of the login button
+               dropdownMenu.style.width = loginButton.offsetWidth + 'px';
+            }
+         }
+
+         function redirectToLogin() {
+            window.location.href = 'login.html';
+         }
+
+         logoutButton.addEventListener('click', function () {
+            localStorage.removeItem('username');
+            username = null;
+            dropdownMenu.style.display = 'none';
+            updateLoginButton();
+            window.location.href = 'index.html'; // Refresh halaman untuk kembali ke keadaan belum login
+         });
+
+         updateLoginButton();
+
+         // Menyembunyikan dropdown menu ketika mengklik di luar
+         document.addEventListener('click', function (event) {
+            if (!loginButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+               dropdownMenu.style.display = 'none';
+            }
+         });
+      });
+   </script>
+
+   <!-- header section end -->
+   <!-- banner section start -->
+   <div class="banner_section layout_padding">
+      <div class="container">
+         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+               <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+               <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+               <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+               <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+               <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+            </ol>
+            <div class="carousel-inner">
+               <div class="carousel-item active">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <h1 class="banner_taital">Bantu Kami Membawa Senyum ke Wajah Anak-anak Palestina!</h1>
+                        <p class="banner_text">Setiap donasi Anda membawa harapan dan keceriaan kepada anak-anak yang
+                           terkena dampak konflik.</p>
+                        <div class="read_bt"><a href="#">Baca</a></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="col-sm-12">
+                     <h1 class="banner_taital">Sumbangkan Sekarang untuk Mengubah Hidup! </h1>
+                     <p class="banner_text">Dengan setiap donasi, Anda membantu memastikan akses pendidikan, kesehatan,
+                        dan perlindungan bagi anak-anak di Palestina. </p>
+                     <div class="read_bt"><a href="#">Baca</a></div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="col-sm-12">
+                     <h1 class="banner_taital">Waktunya Bertindak</h1>
+                     <p class="banner_text">Sumbangkan Sekarang! Donasi Anda memberi kekuatan kepada anak-anak Palestina
+                        dalam mengatasi tantangan yang mereka hadapi setiap hari.. </p>
+                     <div class="read_bt"><a href="#">Baca</a></div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="col-sm-12">
+                     <h1 class="banner_taital">Setetes Perhatian, Banyak Makna</h1>
+                     <p class="banner_text">Dengan berdonasi, Anda memberikan lebih dari sekadar bantuan finansial. </p>
+                     <div class="read_bt"><a href="#">Baca</a></div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="col-sm-12">
+                     <h1 class="banner_taital">Satu Langkah, Banyak Dampak</h1>
+                     <p class="banner_text">Donasi Anda memiliki kekuatan untuk mengubah masa depan. </p>
+                     <div class="read_bt"><a href="#">Baca</a></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="donation_box">
+         <h4 class="donation_taital">Kontak Untuk Donasi</h4>
+         <div class="mail_box">
+            <input type="" class="mail_text" placeholder="Nama Anda" name="Your Name">
+            <input type="" class="mail_text" placeholder="Email" name="Email">
+            <input type="" class="mail_text" placeholder="No Ponsel" name="Phone">
+         </div>
+         <div class="send_bt"><a href="#">Kirim</a></div>
+      </div>
+      <div class="fundraise_section">
+         <div class="fundraise_section_main">
+            <div class="row">
+               <div class="col-lg-4">
+                  <div class="box_main">
+                     <div class="icon_1"><img src="images/icon-1.png"></div>
+                     <h4 class="volunteer_text">SUKARELAWAN</h4>
+                     <p class="lorem_text">Yuk, jadi sukarelawan dan bersama-sama kita memberikan bantuan bagi yang
+                        membutuhkan!</p>
+                     <div class="join_bt"><a href="#">Gabung</a></div>
+                  </div>
+               </div>
+               <div class="col-lg-4">
+                  <div class="box_main active">
+                     <div class="icon_1"><img src="images/icon-2.png"></div>
+                     <h4 class="volunteer_text">PENGGALANGAN DANA</h4>
+                     <p class="lorem_text">Mari bergabung dalam penggalangan dana kami untuk memberi dampak positif bagi
+                        komunitas</p>
+                     <div class="join_bt"><a href="#">Join Now</a></div>
+                  </div>
+               </div>
+               <div class="col-lg-4">
+                  <div class="box_main">
+                     <div class="icon_1"><img src="images/icon-3.png"></div>
+                     <h4 class="volunteer_text">DONASI</h4>
+                     <p class="lorem_text">yo berikan kontribusi Anda dengan berdonasi dan bersama kita bisa mewujudkan
+                        perubahan yang berarti</p>
+                     <div class="join_bt"><a href="#">Join Now</a></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+   <!-- banner section end -->
+   <!-- about section start -->
+   <div class="about_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-8">
+               <h2 class="about_taital">Tentang Kumarism</h2>
+               <p class="about_text">Kumarism adalah sebuah organisasi nirlaba yang berdedikasi untuk memberikan bantuan
+                  kemanusiaan dan pengembangan di wilayah Palestina yang terkena dampak konflik.
+                  Dibentuk oleh sekelompok individu yang peduli dan tergerak oleh penderitaan yang dialami oleh
+                  masyarakat Palestina,
+                  Kumarism bertujuan untuk meningkatkan kesejahteraan dan memberikan harapan bagi penduduk Palestina
+                  melalui berbagai program bantuan dan proyek pembangunan.</p>
+               <div class="readmore_bt"><a href="#">Baca Selengkapnya</a></div>
+            </div>
+            <div class="col-sm-4">
+               <div class="about_img"><img src="images/about-img.png"></div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- about section end -->
+   <!-- mission section start -->
+   <div class="mission_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-12">
+               <h1 class="mission_taital">Misi Kumarism</h1>
+               <p class="mission_text">adalah menyediakan bantuan kemanusiaan dan pembangunan bagi anak-anak di
+                  Palestina, dengan fokus pada pendidikan, kesehatan, dan perlindungan, serta mempromosikan kesadaran
+                  global dan solidaritas internasional untuk mendukung perjuangan rakyat Palestina. </p>
+            </div>
+         </div>
+      </div>
+      <div class="mission_section_2">
+         <div class="row">
+            <div class="offset-md-2"></div>
+            <div class="col-md-5">
+               <div class="container_main">
+                  <img src="images/img-1.png" alt="Avatar" class="image">
+                  <div class="overlay">
+                     <div class="text">
+                        <h4 class="some_text">Misi Pendidikan</h4>
+                        <p class="alteration_text">Memberikan akses pendidikan berkualitas untuk anak-anak Palestina
+                           yang terkena dampak konflik, dengan menyediakan fasilitas belajar yang aman dan mendukung.
+                        </p>
+                        <div class="btn_main">
+                           <div class="donate_bt"><a href="#">Baca</a></div>
+                           <div class="donate_bt"><a href="donate.html">Donasi</a></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-5">
+               <div class="container_main">
+                  <img src="images/img-2.png" alt="Avatar" class="image">
+                  <div class="overlay">
+                     <div class="text">
+                        <h4 class="some_text">Misi Kesehatan </h4>
+                        <p class="alteration_text">Menyediakan layanan kesehatan yang komprehensif, termasuk akses ke
+                           perawatan medis dan psikologis, serta program gizi untuk memastikan anak-anak Palestina
+                           tumbuh dengan sehat dan kuat.</p>
+                        <div class="btn_main">
+                           <div class="donate_bt"><a href="#">Baca</a></div>
+                           <div class="donate_bt"><a href="donate.html">Donasi</a></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="mission_section_2">
+         <div class="row">
+            <div class="col-md-5">
+               <div class="container_main">
+                  <img src="images/img-3.png" alt="Avatar" class="image">
+                  <div class="overlay">
+                     <div class="text">
+                        <h4 class="some_text">Misi Perlindungan</h4>
+                        <p class="alteration_text">Melindungi anak-anak dari kekerasan, eksploitasi, dan trauma
+                           psikologis dengan menyediakan perlindungan, dukungan psikososial, dan advokasi untuk hak-hak
+                           mereka.</p>
+                        <div class="btn_main">
+                           <div class="donate_bt"><a href="#">Baca</a></div>
+                           <div class="donate_bt"><a href="donate.html">Donasi</a></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-5">
+               <div class="container_main">
+                  <img src="images/img-4.png" alt="Avatar" class="image">
+                  <div class="overlay">
+                     <div class="text">
+                        <h4 class="some_text">Misi Nutrisi</h4>
+                        <p class="alteration_text">Memastikan anak-anak Palestina menerima nutrisi yang cukup melalui
+                           program pangan yang berkualitas, untuk mendukung pertumbuhan dan perkembangan fisik dan
+                           mental mereka.</p>
+                        <div class="btn_main">
+                           <div class="donate_bt"><a href="#">Baca</a></div>
+                           <div class="donate_bt"><a href="donate.html">Donasi</a></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="offset-md-2"></div>
+         </div>
+      </div>
+      <div class="mission_section_2">
+         <div class="row">
+            <div class="offset-md-2"></div>
+            <div class="col-md-5">
+               <div class="container_main">
+                  <img src="images/img-5.png" alt="Avatar" class="image">
+                  <div class="overlay">
+                     <div class="text">
+                        <h4 class="some_text">Misi Kemanusiaan</h4>
+                        <p class="alteration_text">Memberikan bantuan kemanusiaan yang mendesak, termasuk bantuan
+                           makanan, air bersih, tempat tinggal, dan perlengkapan kebersihan bagi anak-anak yang
+                           terlantar akibat konflik.</p>
+                        <div class="btn_main">
+                           <div class="donate_bt"><a href="#">Baca</a></div>
+                           <div class="donate_bt"><a href="donate.html">Donasi</a></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-5">
+               <div class="container_main">
+                  <img src="images/img-6.png" alt="Avatar" class="image">
+                  <div class="overlay">
+                     <div class="text">
+                        <h4 class="some_text">Misi Pemberdayaan</h4>
+                        <p class="alteration_text"> Memberdayakan anak-anak Palestina dengan keterampilan, pendidikan
+                           informal, dan pelatihan yang dibutuhkan untuk memungkinkan mereka membangun masa depan yang
+                           lebih baik bagi diri mereka sendiri dan komunitas mereka.</p>
+                        <div class="btn_main">
+                           <div class="donate_bt"><a href="#">Baca</a></div>
+                           <div class="donate_bt"><a href="donate.html">Donasi</a></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- mission section end -->
+   <!-- news section start -->
+   <div class="news_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-12">
+               <h1 class="news_taital">PROJECT KUMARISM</h1>
+               <p class="news_text">Tujuan kami saat ini adalah membawa bantuan kemanusiaan kepada anak-anak di
+                  Palestina yang terkena dampak konflik yang berkepanjangan. </p>
+            </div>
+         </div>
+         <div class="news_section_2">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="news_img"><img src="images/news-img.png"></div>
+               </div>
+               <div class="col-md-6">
+                  <h1 class="give_taital">Pendidikan untuk Masa Depan</h1>
+                  <p class="ipsum_text">Project kami saat ini adalah mendukung akses pendidikan yang berkualitas bagi
+                     anak-anak di Palestina. Dalam situasi konflik yang berkepanjangan, pendidikan sering kali menjadi
+                     korban utama, dengan ribuan anak terputus dari sekolah mereka. <br>
+                     Dengan dukungan Anda, kami dapat membangun dan mendukung sekolah-sekolah baru, <br>
+                     menyediakan sumber daya pendidikan, dan memberikan pelatihan untuk tenaga pendidik.
+                  </p>
+                  <h5 class="raised_text">Terkumpul: RP. 6.500.000,010 <br> <span class="goal_text">Target: Rp.
+                        70.000.000</span></h5>
+                  <div class="donate_btn_main">
+                     <div class="readmore_btn"><a href="#">Baca</a></div>
+                     <div class="readmore_btn_1"><a href="donate.html">Donasi</a></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- news section end -->
+   <!-- events section start -->
+   <div class="events_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-12">
+               <h1 class="news_taital">Kesehatan untuk Masa Depan</h1>
+               <p class="news_text">Project kami saat ini adalah meningkatkan akses kesehatan bagi anak-anak di
+                  Palestina. </p>
+            </div>
+         </div>
+         <div class="events_section_2">
+            <div class="row">
+               <div class="col-md-5">
+                  <div class="img_7"><img src="images/img-7.png" class="img_7"></div>
+                  <div class="date_bt">
+                     <div class="date_text active"><a href="#">01</a></div>
+                     <div class="date_text"><a href="#">MAR</a></div>
+                  </div>
+               </div>
+               <div class="col-md-7">
+                  <h1 class="give_taital_1">Misi Kemanusiaan</h1>
+                  <p class="ipsum_text_1">Tujuan kami saat ini adalah membawa bantuan kemanusiaan kepada anak-anak di
+                     Palestina yang terkena dampak konflik yang berkepanjangan. </p>
+                  <h5 class="raised_text">Terkumpul: RP. 7.500.000,010 <br> <span class="goal_text">Target: Rp.
+                        50.000.000</span></h5>
+                  <div class="donate_btn_main">
+                     <div class="readmore_btn"><a href="#">Baca</a></div>
+                     <div class="readmore_btn_1"><a href="donate.html">Donasi</a></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="events_section_2">
+            <div class="row">
+               <div class="col-md-5">
+                  <div class="img_7"><img src="images/img-8.png" class="img_7"></div>
+                  <div class="date_bt">
+                     <div class="date_text active"><a href="#">10</a></div>
+                     <div class="date_text"><a href="#">MAR</a></div>
+                  </div>
+               </div>
+               <div class="col-md-7">
+                  <h1 class="give_taital_1">Pembangunan Pendidikan</h1>
+                  <p class="ipsum_text_1">Tujuan kami saat ini adalah membangun masa depan cerah melalui pendidikan
+                     untuk anak-anak di Palestina.</p>
+                  <h5 class="raised_text">Terkumpul: RP. 3.000.000,010 <br> <span class="goal_text">Target: Rp.
+                        30.000.000</span></h5>
+                  <div class="donate_btn_main">
+                     <div class="readmore_btn"><a href="#">Baca</a></div>
+                     <div class="readmore_btn_1"><a href="donate.html">Donasi</a></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- events section end -->
+   <!-- donate section start -->
+   <div class="donate_section layout_padding">
+      <div class="container">
+         <h1 class="donate_taital">Orang Yang sudah Berdonasi </h1>
+         <div class="donate_taital_main">
+            <div id="commentsContainer"></div>
+         </div>
+      </div>
+   </div>
+   <!-- donate section end -->
+   <!-- footer section start -->
+   <div class="footer_section layout_padding">
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-3">
+               <div class="footer_logo"><img src="images/footer-logo.png"></div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3">
+               <h4 class="footer_taital">NAVIGASI</h4>
+               <div class="footer_menu_main">
+                  <div class="footer_menu_left">
+                     <div class="footer_menu">
+                        <ul>
+                           <li><a href="index.html">Beranda</a></li>
+                           <li><a href="donate.html">Donasi</a></li>
+                           <li><a href="contact.html">Kontak</a></li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="footer_menu_right">
+                     <div class="footer_menu">
+                        <ul>
+                           <li><a href="about.html">Tentang</a></li>
+                           <li><a href="news.html">Berita</a></li>
+                           <li><a href="mission.html">Misi Kami</a></li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3">
+               <h4 class="footer_taital">BERITA</h4>
+               <p class="footer_text">Tantangan Pendidikan Anak-anak di Palestina</p>
+               <p class="footer_text">Dampak Psikologis Konflik Terhadap Anak-anak Palestina</p>
+               <p class="footer_text">Pembangunan Pusat Permainan untuk Anak-anak Gaza</p>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-3">
+               <h4 class="footer_taital">ALAMAT</h4>
+               <p class="footer_text">Cemani</p>
+               <p class="footer_text">+62 887838685440</p>
+               <p class="footer_text">kumarism@gmail.com</p>
+            </div>
+         </div>
+         <div class="footer_section_2">
+            <div class="row">
+               <div class="col-sm-4 col-md-4 col-lg-3">
+                  <div class="social_icon">
+                     <ul>
+                        <li><a href="#"><img src="images/fb-icon.png"></a></li>
+                        <li><a href="#"><img src="images/twitter-icon.png"></a></li>
+                        <li><a href="#"><img src="images/linkedin-icon.png"></a></li>
+                        <li><a href="#"><img src="images/instagram-icon.png"></a></li>
+                     </ul>
+                  </div>
+               </div>
+               <div class="col-sm-8 col-md-8 col-lg-9">
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- footer section end -->
+   <!-- copyright section start -->
+   <div class="copyright_section">
+      <div class="container">
+         <p class="copyright_text">2024 All Rights Reserved. </p>
+      </div>
+   </div>
+   <!-- copyright section end -->
+   <!-- Javascript files-->
+   <script src="js/jquery.min.js"></script>
+   <script src="js/popper.min.js"></script>
+   <script src="js/bootstrap.bundle.min.js"></script>
+   <script src="js/jquery-3.0.0.min.js"></script>
+   <script src="js/plugin.js"></script>
+   <!-- sidebar -->
+   <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+   <script src="js/custom.js"></script>
+   <!-- javascript -->
+   <script src="js/owl.carousel.js"></script>
+   <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+   <script>
+      $(document).ready(function () {
+         $('.meanmenu-reveal').on('click', function () {
+            $('.meanmenu').slideToggle();
+         });
+      });
+   </script>
+</body>
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+      var navItems = document.querySelectorAll('#navbar .nav-link');
+      var path = window.location.pathname.split("/").pop();
+
+      navItems.forEach(function (navItem) {
+         if (navItem.getAttribute('href') === path) {
+            navItem.parentElement.classList.add('active');
+         }
+
+         navItem.addEventListener('click', function () {
+            navItems.forEach(function (item) {
+               item.parentElement.classList.remove('active');
+            });
+            navItem.parentElement.classList.add('active');
+         });
+      });
+   });
+</script>
+
+</html>
